@@ -1,9 +1,12 @@
 package com.rutaaprendizajewebflux.capability.domain.usecase;
 
+import com.rutaaprendizajewebflux.capability.domain.exception.CapabilityNotFoundException;
 import com.rutaaprendizajewebflux.capability.domain.model.SoloCapabilityModel;
 import com.rutaaprendizajewebflux.capability.domain.ports.in.ICapabilityServicePort;
 import com.rutaaprendizajewebflux.capability.domain.ports.out.ICapabilityPersistencePort;
 import reactor.core.publisher.Mono;
+
+import static com.rutaaprendizajewebflux.capability.domain.util.ExceptionConstants.CAPABILITY_NOT_FOUND;
 
 public class SoloCapabilityUseCase implements ICapabilityServicePort {
 
@@ -15,7 +18,9 @@ public class SoloCapabilityUseCase implements ICapabilityServicePort {
 
     @Override
     public Mono<SoloCapabilityModel> findById(Long id) {
-        return capabilityPersistencePort.findById(id);
+        return capabilityPersistencePort
+                .findById(id)
+                .switchIfEmpty(Mono.error(new CapabilityNotFoundException(CAPABILITY_NOT_FOUND)));
     }
 
 }
