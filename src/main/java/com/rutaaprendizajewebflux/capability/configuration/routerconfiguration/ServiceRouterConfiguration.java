@@ -1,5 +1,6 @@
 package com.rutaaprendizajewebflux.capability.configuration.routerconfiguration;
 
+import com.rutaaprendizajewebflux.capability.application.handler.ICapabilityHandler;
 import com.rutaaprendizajewebflux.capability.application.handler.ISoloCapabilityHandler;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.context.annotation.Bean;
@@ -17,9 +18,10 @@ public class ServiceRouterConfiguration {
     }
 
     @Bean
-    public RouterFunction<ServerResponse> router(ISoloCapabilityHandler soloCapabilityHandler) {
+    public RouterFunction<ServerResponse> router(ISoloCapabilityHandler soloCapabilityHandler, ICapabilityHandler capabilityHandler) {
         return RouterFunctions.route()
                 .GET("/capabilities/{id}", soloCapabilityHandler::findById)
+                .POST("/capabilities", capabilityHandler::save)
                 .build();
     }
 }

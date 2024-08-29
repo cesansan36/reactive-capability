@@ -20,11 +20,6 @@ public class CapabilityPersistenceAdapter implements ICapabilityPersistencePort 
     public Mono<SoloCapabilityModel> findById(Long id) {
         return capabilityRepository
                 .findById(id)
-                .map(c -> {
-                    System.out.println("En el adapter");
-                    System.out.println(c);
-                    return c;
-                })
                 .map(soloCapabilityEntityMapper::toSoloModel);
     }
 

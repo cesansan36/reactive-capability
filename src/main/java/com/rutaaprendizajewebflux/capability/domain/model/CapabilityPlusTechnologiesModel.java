@@ -1,6 +1,9 @@
 package com.rutaaprendizajewebflux.capability.domain.model;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class CapabilityPlusTechnologiesModel {
 
@@ -53,5 +56,32 @@ public class CapabilityPlusTechnologiesModel {
                 .stream()
                 .map(Technology::getName)
                 .toList();
+    }
+
+    public void removeDuplicatedTechnologiesByName() {
+        if (technologies == null || technologies.isEmpty()) {
+            return; // Nothing to do if the list is null or empty
+        }
+
+        Set<String> uniqueTechnologyNames = new HashSet<>();
+        List<Technology> filteredTechnologies = new ArrayList<>();
+
+        for (Technology technology : technologies) {
+            if (technology != null && technology.getName() != null && uniqueTechnologyNames.add(technology.getName())) {
+                filteredTechnologies.add(technology);
+            }
+        }
+
+        this.technologies = filteredTechnologies;
+    }
+
+    @Override
+    public String toString() {
+        return "CapabilityPlusTechnologiesModel{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", technologies=" + technologies +
+                '}';
     }
 }

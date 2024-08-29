@@ -8,11 +8,6 @@ public class SoloCapabilityEntityMapper implements ISoloCapabilityEntityMapper {
 
     @Override
     public SoloCapabilityModel toSoloModel(CapabilityEntity entity) {
-
-        System.out.println("Desde el entity mapper");
-
-        System.out.println(entity);
-
         return new SoloCapabilityModel(
                 entity.getId(),
                 entity.getName(),

@@ -13,6 +13,7 @@ public class TechnologyWebClientAdapter implements ITechnologyCommunicationPort 
     private final WebClient webClient;
     private final ICapabilityPlusTechnologyWebclientMapper capabilityPlusTechnologyWebclientMapper;
 
+    @Override
     public Mono<Void> associateTechnologiesWithCapability(CapabilityPlusTechnologiesModel capability)
     {
         return webClient
