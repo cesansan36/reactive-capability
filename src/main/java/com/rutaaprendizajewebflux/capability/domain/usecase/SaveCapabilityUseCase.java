@@ -6,7 +6,7 @@ import com.rutaaprendizajewebflux.capability.domain.ports.in.ISaveCapabilityServ
 import com.rutaaprendizajewebflux.capability.domain.ports.out.ICapabilityPersistencePort;
 import com.rutaaprendizajewebflux.capability.domain.ports.out.ITechnologyCommunicationPort;
 import com.rutaaprendizajewebflux.capability.domain.util.Validator;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -15,14 +15,15 @@ public class SaveCapabilityUseCase implements ISaveCapabilityServicePort {
 
     private final ICapabilityPersistencePort capabilityPersistencePort;
     private final ITechnologyCommunicationPort technologyCommunicationPort;
+    private final TransactionalOperator transactionalOperator;
 
-    public SaveCapabilityUseCase(ICapabilityPersistencePort capabilityPersistencePort, ITechnologyCommunicationPort technologyCommunicationPort) {
+    public SaveCapabilityUseCase(ICapabilityPersistencePort capabilityPersistencePort, ITechnologyCommunicationPort technologyCommunicationPort, TransactionalOperator transactionalOperator) {
         this.capabilityPersistencePort = capabilityPersistencePort;
         this.technologyCommunicationPort = technologyCommunicationPort;
+        this.transactionalOperator = transactionalOperator;
     }
 
     @Override
-    @Transactional
     public Mono<CapabilityPlusTechnologiesModel> save(Mono<CapabilityPlusTechnologiesModel> capabilityPlusTechnologiesModel) {
         return capabilityPlusTechnologiesModel
                 .map(this::validate)
@@ -31,11 +32,12 @@ public class SaveCapabilityUseCase implements ISaveCapabilityServicePort {
 
                     return saveCapability(capability)
                             .map(savedCapability -> {
-                                savedCapability.setTechnologies(technologies);  // Restauras las tecnologías
+                                savedCapability.setTechnologies(technologies);
                                 return savedCapability;
-                            });
+                            })
+                            .flatMap(this::asociateTechnologiesWithCapability);
                 })
-                .flatMap(this::asociateTechnologiesWithCapability);
+                .as(transactionalOperator::transactional);  // Ejecutas dentro de una transacción
     }
 
     CapabilityPlusTechnologiesModel validate(CapabilityPlusTechnologiesModel capabilityPlusTechnologiesModel) {

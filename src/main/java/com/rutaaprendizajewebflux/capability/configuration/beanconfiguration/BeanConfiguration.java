@@ -27,6 +27,7 @@ import com.rutaaprendizajewebflux.capability.infrastructure.secondary.mapper.imp
 import com.rutaaprendizajewebflux.capability.infrastructure.secondary.repository.ICapabilityRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.reactive.TransactionalOperator;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
@@ -80,10 +81,11 @@ public class BeanConfiguration {
 
     @Bean
     public ISaveCapabilityServicePort saveCapabilityServicePort(
-            ICapabilityPersistencePort capabilityPersistencePort
-            , ITechnologyCommunicationPort technologyCommunicationPort) {
+            ICapabilityPersistencePort capabilityPersistencePort,
+            ITechnologyCommunicationPort technologyCommunicationPort,
+            TransactionalOperator transactionalOperator) {
 
-        return new SaveCapabilityUseCase(capabilityPersistencePort, technologyCommunicationPort);
+        return new SaveCapabilityUseCase(capabilityPersistencePort, technologyCommunicationPort, transactionalOperator);
     }
 
     @Bean
