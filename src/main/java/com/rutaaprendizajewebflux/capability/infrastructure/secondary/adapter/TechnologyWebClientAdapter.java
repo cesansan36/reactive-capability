@@ -23,7 +23,7 @@ public class TechnologyWebClientAdapter implements ITechnologyCommunicationPort 
                 .retrieve()
                 .onStatus( status -> status.is4xxClientError() || status.is5xxServerError() ,
                         response -> response.bodyToMono(String.class)
-                                .flatMap(error -> Mono.error(new RuntimeException(error))))
+                                .flatMap(error -> Mono.error(new RuntimeException("No fue posible asociar las tecnologías con la capacidad: " + error))))
                 .bodyToMono(Void.class)
                 .onErrorResume(error -> Mono.error(new RuntimeException(error.getMessage())));
     }
