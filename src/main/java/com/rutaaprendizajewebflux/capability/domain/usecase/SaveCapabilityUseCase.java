@@ -1,5 +1,6 @@
 package com.rutaaprendizajewebflux.capability.domain.usecase;
 
+import com.rutaaprendizajewebflux.capability.domain.exception.CapabilityAlreadyExistsException;
 import com.rutaaprendizajewebflux.capability.domain.model.CapabilityPlusTechnologiesModel;
 import com.rutaaprendizajewebflux.capability.domain.model.Technology;
 import com.rutaaprendizajewebflux.capability.domain.ports.in.ISaveCapabilityServicePort;
@@ -27,6 +28,11 @@ public class SaveCapabilityUseCase implements ISaveCapabilityServicePort {
     public Mono<CapabilityPlusTechnologiesModel> save(Mono<CapabilityPlusTechnologiesModel> capabilityPlusTechnologiesModel) {
         return capabilityPlusTechnologiesModel
                 .map(this::validate)
+                .flatMap(capa -> capabilityPersistencePort.findByName(capa.getName())
+                        .hasElement()
+                        .flatMap(exists -> Boolean.TRUE.equals(exists)
+                                ? Mono.error(new CapabilityAlreadyExistsException("La capacidad ya existe"))
+                                : Mono.just(capa)))
                 .flatMap(capability -> {
                     List<Technology> technologies = capability.getTechnologies();
 

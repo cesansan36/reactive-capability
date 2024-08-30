@@ -7,5 +7,7 @@ import reactor.core.publisher.Mono;
 public interface ICapabilityPersistencePort {
     Mono<SoloCapabilityModel> findById(Long id);
 
+    Mono<SoloCapabilityModel> findByName(String name);
+
     Mono<CapabilityPlusTechnologiesModel> save(Mono<CapabilityPlusTechnologiesModel> capabilityPlusTechnologiesModel);
 }

@@ -24,6 +24,13 @@ public class CapabilityPersistenceAdapter implements ICapabilityPersistencePort 
     }
 
     @Override
+    public Mono<SoloCapabilityModel> findByName(String name) {
+        return capabilityRepository
+                .findByName(name).map(soloCapabilityEntityMapper::toSoloModel);
+    }
+
+
+    @Override
     public Mono<CapabilityPlusTechnologiesModel> save(Mono<CapabilityPlusTechnologiesModel> capabilityPlusTechnologiesModel) {
         return capabilityPlusTechnologiesModel
                 .map(capabilityPlusTechnologyEntityMapper::toEntity)
