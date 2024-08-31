@@ -3,6 +3,7 @@ package com.rutaaprendizajewebflux.capability.infrastructure.secondary.adapter;
 import com.rutaaprendizajewebflux.capability.domain.model.CapabilityPlusTechnologiesModel;
 import com.rutaaprendizajewebflux.capability.domain.ports.out.ITechnologyCommunicationPort;
 import com.rutaaprendizajewebflux.capability.infrastructure.secondary.mapper.ICapabilityPlusTechnologyWebclientMapper;
+import com.rutaaprendizajewebflux.capability.infrastructure.secondary.webclientobjects.response.CapabilityWithTechnologyResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -26,5 +27,19 @@ public class TechnologyWebClientAdapter implements ITechnologyCommunicationPort 
                                 .flatMap(error -> Mono.error(new RuntimeException("No fue posible asociar las tecnologías con la capacidad: " + error))))
                 .bodyToMono(Void.class)
                 .onErrorResume(error -> Mono.error(new RuntimeException(error.getMessage())));
+    }
+
+    @Override
+    public Mono<CapabilityPlusTechnologiesModel> getTechnologiesByCapabilityId(Long capabilityId) {
+        return webClient
+                .get()
+                .uri("/linked-capability-technologies/{capabilityId}", capabilityId)
+                .retrieve()
+                .onStatus(httpStatus -> httpStatus.is4xxClientError() || httpStatus.is5xxServerError(),
+                        clientResponse -> clientResponse.bodyToMono(String.class)
+                                .flatMap(errorBody -> Mono.error(new RuntimeException(errorBody))))
+                .bodyToMono(CapabilityWithTechnologyResponse.class)
+                .map(capabilityPlusTechnologyWebclientMapper::toModel)
+                .onErrorResume(Exception.class, ex -> Mono.error(new RuntimeException(ex.getMessage())));
     }
 }

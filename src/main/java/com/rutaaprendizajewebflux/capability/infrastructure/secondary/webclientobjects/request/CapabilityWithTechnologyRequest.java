@@ -1,4 +1,4 @@
-package com.rutaaprendizajewebflux.capability.infrastructure.secondary.webclientobjects;
+package com.rutaaprendizajewebflux.capability.infrastructure.secondary.webclientobjects.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class SaveCapabilityWithTechnologyRequest {
+public class CapabilityWithTechnologyRequest {
 
     private Long capabilityId;
     private List<String> technologiesNames;

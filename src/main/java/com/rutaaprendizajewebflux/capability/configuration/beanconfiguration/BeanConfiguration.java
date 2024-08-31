@@ -11,9 +11,11 @@ import com.rutaaprendizajewebflux.capability.application.mapper.impl.CapabilityP
 import com.rutaaprendizajewebflux.capability.application.mapper.impl.CapabilityPlusTechnologiesResponseMapper;
 import com.rutaaprendizajewebflux.capability.application.mapper.impl.SoloCapabilityResponseMapper;
 import com.rutaaprendizajewebflux.capability.domain.ports.in.ICapabilityServicePort;
+import com.rutaaprendizajewebflux.capability.domain.ports.in.IReadCapabilityServicePort;
 import com.rutaaprendizajewebflux.capability.domain.ports.in.ISaveCapabilityServicePort;
 import com.rutaaprendizajewebflux.capability.domain.ports.out.ICapabilityPersistencePort;
 import com.rutaaprendizajewebflux.capability.domain.ports.out.ITechnologyCommunicationPort;
+import com.rutaaprendizajewebflux.capability.domain.usecase.ReadCapabilityUseCase;
 import com.rutaaprendizajewebflux.capability.domain.usecase.SaveCapabilityUseCase;
 import com.rutaaprendizajewebflux.capability.domain.usecase.SoloCapabilityUseCase;
 import com.rutaaprendizajewebflux.capability.infrastructure.secondary.adapter.CapabilityPersistenceAdapter;
@@ -27,6 +29,7 @@ import com.rutaaprendizajewebflux.capability.infrastructure.secondary.mapper.imp
 import com.rutaaprendizajewebflux.capability.infrastructure.secondary.repository.ICapabilityRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.transaction.reactive.TransactionalOperator;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -55,9 +58,10 @@ public class BeanConfiguration {
 
     @Bean
     public ICapabilityPersistencePort capabilityPersistencePort(ICapabilityRepository capabilityRepository,
-                                                                 ISoloCapabilityEntityMapper soloCapabilityEntityMapper,
-                                                                ICapabilityPlusTechnologyEntityMapper capabilityPlusTechnologyEntityMapper) {
-        return new CapabilityPersistenceAdapter(capabilityRepository, soloCapabilityEntityMapper, capabilityPlusTechnologyEntityMapper);
+                                                                ISoloCapabilityEntityMapper soloCapabilityEntityMapper,
+                                                                ICapabilityPlusTechnologyEntityMapper capabilityPlusTechnologyEntityMapper,
+                                                                R2dbcEntityTemplate r2dbcEntityTemplate) {
+        return new CapabilityPersistenceAdapter(capabilityRepository, soloCapabilityEntityMapper, capabilityPlusTechnologyEntityMapper, r2dbcEntityTemplate);
     }
 
     @Bean
@@ -99,11 +103,20 @@ public class BeanConfiguration {
     }
 
     @Bean
+    public IReadCapabilityServicePort readCapabilityServicePort(
+            ITechnologyCommunicationPort technologyCommunicationPort,
+            ICapabilityPersistencePort capabilityPersistencePort
+    ) {
+        return new ReadCapabilityUseCase(technologyCommunicationPort, capabilityPersistencePort);
+    }
+
+    @Bean
     public ICapabilityHandler capabilityHandler(
             ISaveCapabilityServicePort saveCapabilityServicePort,
+            IReadCapabilityServicePort readCapabilityServicePort,
             ICapabilityPlusTechnologiesResponseMapper capabilityPlusTechnologiesResponseMapper,
             ICapabilityPlusTechnologiesRequestMapper capabilityPlusTechnologiesRequestMapper
     ) {
-        return new CapabilityHandler(saveCapabilityServicePort, capabilityPlusTechnologiesResponseMapper, capabilityPlusTechnologiesRequestMapper);
+        return new CapabilityHandler(saveCapabilityServicePort, readCapabilityServicePort, capabilityPlusTechnologiesResponseMapper, capabilityPlusTechnologiesRequestMapper);
     }
 }

@@ -21,6 +21,7 @@ public class ServiceRouterConfiguration {
     public RouterFunction<ServerResponse> router(ISoloCapabilityHandler soloCapabilityHandler, ICapabilityHandler capabilityHandler) {
         return RouterFunctions.route()
                 .GET("/capabilities/{id}", soloCapabilityHandler::findById)
+                .GET("/capabilities", capabilityHandler::findAllPaginated)
                 .POST("/capabilities", capabilityHandler::save)
                 .build();
     }

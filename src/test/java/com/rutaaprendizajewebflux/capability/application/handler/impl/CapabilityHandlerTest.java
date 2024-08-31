@@ -1,7 +1,7 @@
 package com.rutaaprendizajewebflux.capability.application.handler.impl;
 
 import com.rutaaprendizajewebflux.capability.application.dto.request.SaveCapabilityPlusTechnologiesRequest;
-import com.rutaaprendizajewebflux.capability.application.dto.response.SaveCapabilityPlusTechnologiesResponse;
+import com.rutaaprendizajewebflux.capability.application.dto.response.CapabilityPlusTechnologiesResponse;
 import com.rutaaprendizajewebflux.capability.application.dto.response.TechnologyInCapabilityResponse;
 import com.rutaaprendizajewebflux.capability.application.mapper.ICapabilityPlusTechnologiesRequestMapper;
 import com.rutaaprendizajewebflux.capability.application.mapper.ICapabilityPlusTechnologiesResponseMapper;
@@ -60,7 +60,7 @@ class CapabilityHandlerTest {
         List<String> technologiesNames = List.of("Tecnologia 1", "Tecnologia 2");
         SaveCapabilityPlusTechnologiesRequest saveRequest = new SaveCapabilityPlusTechnologiesRequest("Capability 1", "Description 1", technologiesNames);
         List<TechnologyInCapabilityResponse> technologies = List.of(new TechnologyInCapabilityResponse(1L, "Tecnologia 1"), new TechnologyInCapabilityResponse(2L, "Tecnologia 2"));
-        SaveCapabilityPlusTechnologiesResponse response = new SaveCapabilityPlusTechnologiesResponse(1L, "Capability 1", "Description 1", technologies);
+        CapabilityPlusTechnologiesResponse response = new CapabilityPlusTechnologiesResponse(1L, "Capability 1", "Description 1", technologies);
 
         when(requestMapper.toModel(any(SaveCapabilityPlusTechnologiesRequest.class)))
                 .thenReturn(new CapabilityPlusTechnologiesModel(null, "Capability 1", "Description 1", new ArrayList<>()));
@@ -75,7 +75,7 @@ class CapabilityHandlerTest {
                 .bodyValue(saveRequest)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(SaveCapabilityPlusTechnologiesResponse.class)
+                .expectBody(CapabilityPlusTechnologiesResponse.class)
                 .value(capabilityResponse -> assertThat(capabilityResponse).usingRecursiveComparison().isEqualTo(response));
     }
 }

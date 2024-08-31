@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class SaveCapabilityPlusTechnologiesResponse {
+public class CapabilityPlusTechnologiesResponse {
 
     private Long id;
     private String name;
