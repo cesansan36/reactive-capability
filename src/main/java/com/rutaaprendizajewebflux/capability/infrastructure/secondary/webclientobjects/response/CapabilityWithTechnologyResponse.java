@@ -13,6 +13,6 @@ import java.util.List;
 @Setter
 public class CapabilityWithTechnologyResponse {
 
-    private Long id;
+    private Long capabilityId;
     private List<TechnologyResponse> technologies;
 }

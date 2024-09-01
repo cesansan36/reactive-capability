@@ -57,4 +57,9 @@ public class CapabilityPersistenceAdapter implements ICapabilityPersistencePort 
         return r2dbcEntityTemplate.select(query, CapabilityEntity.class)
                 .map(capabilityPlusTechnologyEntityMapper::toModel);
     }
+
+    @Override
+    public Flux<CapabilityPlusTechnologiesModel> findAllByIds(Flux<Long> ids) {
+        return capabilityRepository.findAllById(ids).map(capabilityPlusTechnologyEntityMapper::toModel);
+    }
 }

@@ -10,6 +10,7 @@ public class CapabilityPlusTechnologyEntityMapper implements ICapabilityPlusTech
 
     @Override
     public CapabilityPlusTechnologiesModel toModel(CapabilityEntity entity) {
+
         return new CapabilityPlusTechnologiesModel(
                 entity.getId(),
                 entity.getName(),

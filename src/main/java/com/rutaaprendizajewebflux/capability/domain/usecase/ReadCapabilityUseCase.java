@@ -29,7 +29,21 @@ public class ReadCapabilityUseCase implements IReadCapabilityServicePort {
     }
 
     private Flux<CapabilityPlusTechnologiesModel> findPaginatedByTechnologyQuantity(int page, int size, String direction) {
-        return null;
+
+        Flux<CapabilityPlusTechnologiesModel> capabilitiesIdWithTechnologies = technologyCommunicationPort.findPaginatedCapabilityIdsByTechnologyAmount(page, size, direction);
+
+        Flux<Long> capabilitiesIds = capabilitiesIdWithTechnologies.map(CapabilityPlusTechnologiesModel::getId);
+
+        Flux<CapabilityPlusTechnologiesModel> capabilities = capabilityPersistencePort.findAllByIds(capabilitiesIds);
+
+        return capabilitiesIdWithTechnologies
+                .flatMap(capabilityWithTech -> capabilities
+                        .filter(capability -> capability.getId().equals(capabilityWithTech.getId()))
+                        .map(capability -> {
+                                capability.setTechnologies(capabilityWithTech.getTechnologies());
+                                return capability;
+                            })
+                );
     }
 
     private Flux<CapabilityPlusTechnologiesModel> findPaginatedByField(int page, int size, String sortBy, String direction) {

@@ -13,4 +13,6 @@ public interface ICapabilityPersistencePort {
     Mono<CapabilityPlusTechnologiesModel> save(Mono<CapabilityPlusTechnologiesModel> capabilityPlusTechnologiesModel);
 
     Flux<CapabilityPlusTechnologiesModel> findAllPaginatedByField(int page, int size, String sortBy, String direction);
+
+    Flux<CapabilityPlusTechnologiesModel> findAllByIds(Flux<Long> ids);
 }

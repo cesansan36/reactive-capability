@@ -6,6 +6,7 @@ import com.rutaaprendizajewebflux.capability.infrastructure.secondary.mapper.ICa
 import com.rutaaprendizajewebflux.capability.infrastructure.secondary.webclientobjects.response.CapabilityWithTechnologyResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
@@ -39,6 +40,25 @@ public class TechnologyWebClientAdapter implements ITechnologyCommunicationPort 
                         clientResponse -> clientResponse.bodyToMono(String.class)
                                 .flatMap(errorBody -> Mono.error(new RuntimeException(errorBody))))
                 .bodyToMono(CapabilityWithTechnologyResponse.class)
+                .map(capabilityPlusTechnologyWebclientMapper::toModel)
+                .onErrorResume(Exception.class, ex -> Mono.error(new RuntimeException(ex.getMessage())));
+    }
+
+    @Override
+    public Flux<CapabilityPlusTechnologiesModel> findPaginatedCapabilityIdsByTechnologyAmount(int page, int size, String direction) {
+        return webClient
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/linked-capability-technologies")
+                        .queryParam("page", page)
+                        .queryParam("size", size)
+                        .queryParam("direction", direction)
+                        .build())
+                .retrieve()
+                .onStatus(httpStatus -> httpStatus.is4xxClientError() || httpStatus.is5xxServerError(),
+                        clientResponse -> clientResponse.bodyToMono(String.class)
+                                .flatMap(errorBody -> Mono.error(new RuntimeException(errorBody))))
+                .bodyToFlux(CapabilityWithTechnologyResponse.class)
                 .map(capabilityPlusTechnologyWebclientMapper::toModel)
                 .onErrorResume(Exception.class, ex -> Mono.error(new RuntimeException(ex.getMessage())));
     }
