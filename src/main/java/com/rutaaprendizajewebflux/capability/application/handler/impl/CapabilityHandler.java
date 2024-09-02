@@ -8,6 +8,7 @@ import com.rutaaprendizajewebflux.capability.application.mapper.ICapabilityPlusT
 import com.rutaaprendizajewebflux.capability.domain.ports.in.IReadCapabilityServicePort;
 import com.rutaaprendizajewebflux.capability.domain.ports.in.ISaveCapabilityServicePort;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -18,12 +19,20 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Slf4j
 public class CapabilityHandler implements ICapabilityHandler {
 
     private final ISaveCapabilityServicePort saveCapabilityServicePort;
     private final IReadCapabilityServicePort readCapabilityServicePort;
     private final ICapabilityPlusTechnologiesResponseMapper capabilityPlusTechnologiesResponseMapper;
     private final ICapabilityPlusTechnologiesRequestMapper capabilityPlusTechnologiesRequestMapper;
+
+    public static final List<String> ALLOWED_ORDER_BY_VALUES = List.of("id", "name", "description", "technologies");
+    public static final List<String> ALLOWED_SORT_DIRECTIONS = List.of("ASC", "DESC");
+    public static final int DEFAULT_PAGE = 0;
+    public static final int DEFAULT_SIZE = 3;
+    public static final String DEFAULT_SORT_BY = "name";
+    public static final String DEFAULT_SORT_DIRECTION = Sort.Direction.ASC.name();
 
     @Override
     public Mono<ServerResponse> save(ServerRequest serverRequest) {
@@ -43,10 +52,10 @@ public class CapabilityHandler implements ICapabilityHandler {
 
     @Override
     public Mono<ServerResponse> findAllPaginated(ServerRequest serverRequest) {
-        int page = serverRequest.queryParam("page").map(Integer::parseInt).orElse(0);
-        int size = serverRequest.queryParam("size").map(Integer::parseInt).orElse(5);
-        String sortBy = serverRequest.queryParam("sortBy").orElse("name");
-        String direction = serverRequest.queryParam("direction").orElse(Sort.Direction.ASC.name());
+        int page = serverRequest.queryParam("page").map(num -> validateWholeNumber(num, DEFAULT_PAGE)).orElse(DEFAULT_PAGE);
+        int size = serverRequest.queryParam("size").map(num -> validateWholeNumber(num, DEFAULT_SIZE)).orElse(DEFAULT_SIZE);
+        String sortBy = serverRequest.queryParam("sortBy").filter(ALLOWED_ORDER_BY_VALUES::contains).orElse(DEFAULT_SORT_BY);
+        String direction = serverRequest.queryParam("direction").filter(ALLOWED_SORT_DIRECTIONS::contains).orElse(DEFAULT_SORT_DIRECTION);
 
         Mono<List<CapabilityPlusTechnologiesResponse>> response = readCapabilityServicePort
                 // Buscamos paginado
@@ -57,7 +66,7 @@ public class CapabilityHandler implements ICapabilityHandler {
                 .collectSortedList((capability1, capability2) -> {
                     int comparisonResult;
                     if(sortBy.equalsIgnoreCase("technologies")) {
-                        comparisonResult = Integer.compare(capability1.getTotalTechnologies(), capability2.getTotalTechnologies());
+                        comparisonResult = Integer.compare(capability1.getTechnologies().size(), capability2.getTechnologies().size());
                     } else if (sortBy.equalsIgnoreCase("name")) {
                         comparisonResult = capability1.getName().compareToIgnoreCase(capability2.getName());
                     }
@@ -70,5 +79,15 @@ public class CapabilityHandler implements ICapabilityHandler {
         return ServerResponse
                 .ok()
                 .body(response, CapabilityPlusTechnologiesResponse.class);
+    }
+
+    int validateWholeNumber(String value, int min) {
+        try {
+            int number = Integer.parseInt(value);
+            return Math.max(min, number);
+        } catch (NumberFormatException e) {
+            log.error("Error parsing number: {}", e.getMessage());
+            return min;
+        }
     }
 }

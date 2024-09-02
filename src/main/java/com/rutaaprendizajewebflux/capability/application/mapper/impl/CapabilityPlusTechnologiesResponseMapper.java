@@ -11,6 +11,7 @@ public class CapabilityPlusTechnologiesResponseMapper implements ICapabilityPlus
 
     @Override
     public CapabilityPlusTechnologiesResponse toResponse(CapabilityPlusTechnologiesModel model) {
+
         List<TechnologyInCapabilityResponse> technologiesResponse = model
                 .getTechnologies().stream().map(technology -> new TechnologyInCapabilityResponse(
                         technology.getId(),
