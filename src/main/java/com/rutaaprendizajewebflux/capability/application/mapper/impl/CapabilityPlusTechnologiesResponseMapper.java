@@ -21,6 +21,7 @@ public class CapabilityPlusTechnologiesResponseMapper implements ICapabilityPlus
                 model.getId(),
                 model.getName(),
                 model.getDescription(),
+                technologiesResponse.size(),
                 technologiesResponse
         );
     }

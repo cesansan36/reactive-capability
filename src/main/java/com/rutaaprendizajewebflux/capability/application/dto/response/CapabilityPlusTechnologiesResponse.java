@@ -16,5 +16,6 @@ public class CapabilityPlusTechnologiesResponse {
     private Long id;
     private String name;
     private String description;
+    private int totalTechnologies;
     private List<TechnologyInCapabilityResponse> technologies;
 }

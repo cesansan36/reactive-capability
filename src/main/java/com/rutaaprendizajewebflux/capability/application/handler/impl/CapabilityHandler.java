@@ -15,6 +15,8 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 public class CapabilityHandler implements ICapabilityHandler {
 
@@ -46,8 +48,24 @@ public class CapabilityHandler implements ICapabilityHandler {
         String sortBy = serverRequest.queryParam("sortBy").orElse("name");
         String direction = serverRequest.queryParam("direction").orElse(Sort.Direction.ASC.name());
 
-        Flux<CapabilityPlusTechnologiesResponse> response = readCapabilityServicePort.findAllPaginated(page, size, sortBy, direction)
-                .map(capabilityPlusTechnologiesResponseMapper::toResponse);
+        Mono<List<CapabilityPlusTechnologiesResponse>> response = readCapabilityServicePort
+                // Buscamos paginado
+                .findAllPaginated(page, size, sortBy, direction)
+                // Mapeamos a DTO
+                .map(capabilityPlusTechnologiesResponseMapper::toResponse)
+                // Ordenamos
+                .collectSortedList((capability1, capability2) -> {
+                    int comparisonResult;
+                    if(sortBy.equalsIgnoreCase("technologies")) {
+                        comparisonResult = Integer.compare(capability1.getTotalTechnologies(), capability2.getTotalTechnologies());
+                    } else if (sortBy.equalsIgnoreCase("name")) {
+                        comparisonResult = capability1.getName().compareToIgnoreCase(capability2.getName());
+                    }
+                    else {
+                        comparisonResult = capability1.getId().compareTo(capability2.getId());
+                    }
+                    return direction.equalsIgnoreCase("ASC") ? comparisonResult : -comparisonResult;
+                });
 
         return ServerResponse
                 .ok()
