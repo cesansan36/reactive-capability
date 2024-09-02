@@ -18,6 +18,11 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+import static com.rutaaprendizajewebflux.capability.domain.util.DomainConstants.ORDER_BY_DESCRIPTION;
+import static com.rutaaprendizajewebflux.capability.domain.util.DomainConstants.ORDER_BY_ID;
+import static com.rutaaprendizajewebflux.capability.domain.util.DomainConstants.ORDER_BY_NAME;
+import static com.rutaaprendizajewebflux.capability.domain.util.DomainConstants.ORDER_BY_TECHNOLOGIES;
+
 @RequiredArgsConstructor
 @Slf4j
 public class CapabilityHandler implements ICapabilityHandler {
@@ -27,11 +32,11 @@ public class CapabilityHandler implements ICapabilityHandler {
     private final ICapabilityPlusTechnologiesResponseMapper capabilityPlusTechnologiesResponseMapper;
     private final ICapabilityPlusTechnologiesRequestMapper capabilityPlusTechnologiesRequestMapper;
 
-    public static final List<String> ALLOWED_ORDER_BY_VALUES = List.of("id", "name", "description", "technologies");
+    public static final List<String> ALLOWED_ORDER_BY_VALUES = List.of(ORDER_BY_ID, ORDER_BY_NAME, ORDER_BY_DESCRIPTION, ORDER_BY_TECHNOLOGIES);
     public static final List<String> ALLOWED_SORT_DIRECTIONS = List.of("ASC", "DESC");
     public static final int DEFAULT_PAGE = 0;
     public static final int DEFAULT_SIZE = 3;
-    public static final String DEFAULT_SORT_BY = "name";
+    public static final String DEFAULT_SORT_BY = ORDER_BY_NAME;
     public static final String DEFAULT_SORT_DIRECTION = Sort.Direction.ASC.name();
 
     @Override

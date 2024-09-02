@@ -6,7 +6,7 @@ import com.rutaaprendizajewebflux.capability.domain.ports.in.ICapabilityServiceP
 import com.rutaaprendizajewebflux.capability.domain.ports.out.ICapabilityPersistencePort;
 import reactor.core.publisher.Mono;
 
-import static com.rutaaprendizajewebflux.capability.domain.util.ExceptionConstants.CAPABILITY_NOT_FOUND;
+import static com.rutaaprendizajewebflux.capability.domain.util.ExceptionConstants.CAPABILITY_NOT_FOUND_MESSAGE;
 
 public class SoloCapabilityUseCase implements ICapabilityServicePort {
 
@@ -20,7 +20,7 @@ public class SoloCapabilityUseCase implements ICapabilityServicePort {
     public Mono<SoloCapabilityModel> findById(Long id) {
         return capabilityPersistencePort
                 .findById(id)
-                .switchIfEmpty(Mono.error(new CapabilityNotFoundException(CAPABILITY_NOT_FOUND)));
+                .switchIfEmpty(Mono.error(new CapabilityNotFoundException(CAPABILITY_NOT_FOUND_MESSAGE)));
     }
 
 }

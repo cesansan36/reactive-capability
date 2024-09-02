@@ -151,8 +151,8 @@ class CapabilityHandlerTest {
                 .expectBodyList(CapabilityPlusTechnologiesResponse.class)
                 .value(responses -> {
                     List<CapabilityPlusTechnologiesResponse> responsesList = new ArrayList<>(responses);
-                    assertThat(responsesList.get(0)).isEqualTo(response2);
-                    assertThat(responsesList.get(1)).isEqualTo(response1);
+                    assertThat(responsesList.get(0)).usingRecursiveComparison().isEqualTo(response2);
+                    assertThat(responsesList.get(1)).usingRecursiveComparison().isEqualTo(response1);
                 });
     }
 
@@ -188,8 +188,8 @@ class CapabilityHandlerTest {
                 .expectBodyList(CapabilityPlusTechnologiesResponse.class)
                 .value(responses -> {
                     List<CapabilityPlusTechnologiesResponse> responsesList = new ArrayList<>(responses);
-                    assertThat(responsesList.get(0)).isEqualTo(response1);
-                    assertThat(responsesList.get(1)).isEqualTo(response2);
+                    assertThat(responsesList.get(0)).usingRecursiveComparison().isEqualTo(response1);
+                    assertThat(responsesList.get(1)).usingRecursiveComparison().isEqualTo(response2);
                 });
     }
 
@@ -222,8 +222,8 @@ class CapabilityHandlerTest {
                 .expectBodyList(CapabilityPlusTechnologiesResponse.class)
                 .value(responses -> {
                     List<CapabilityPlusTechnologiesResponse> responsesList = new ArrayList<>(responses);
-                    assertThat(responsesList.get(0)).isEqualTo(response1);
-                    assertThat(responsesList.get(1)).isEqualTo(response2);
+                    assertThat(responsesList.get(0)).usingRecursiveComparison().isEqualTo(response1);
+                    assertThat(responsesList.get(1)).usingRecursiveComparison().isEqualTo(response2);
                 });
     }
 
