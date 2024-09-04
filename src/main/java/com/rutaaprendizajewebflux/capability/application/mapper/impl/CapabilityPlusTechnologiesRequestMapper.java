@@ -11,6 +11,10 @@ public class CapabilityPlusTechnologiesRequestMapper implements ICapabilityPlusT
 
     @Override
     public CapabilityPlusTechnologiesModel toModel(SaveCapabilityPlusTechnologiesRequest request) {
+
+        System.out.println("esto es lo que llega? =============================================================");
+        System.out.println(request);
+
         List<Technology> technologies = request
                 .getTechnologiesNames()
                 .stream()

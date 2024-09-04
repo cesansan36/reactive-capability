@@ -22,9 +22,16 @@ public class CapabilityPlusTechnologyWebclientMapper implements ICapabilityPlusT
     @Override
     public CapabilityPlusTechnologiesModel toModel(CapabilityWithTechnologyResponse capabilityWithTechnologyResponse) {
 
-        List<Technology> technologies = capabilityWithTechnologyResponse.getTechnologies().stream().map(this::toTechnologyModel).toList();
+        List<Technology> technologies = capabilityWithTechnologyResponse
+                .getTechnologies()
+                .stream()
+                .map(this::toTechnologyModel)
+                .toList();
 
-        return new CapabilityPlusTechnologiesModel(capabilityWithTechnologyResponse.getCapabilityId(), null, null, technologies);
+        return new CapabilityPlusTechnologiesModel(capabilityWithTechnologyResponse.getCapabilityId(),
+                null,
+                null,
+                technologies);
     }
 
     private Technology toTechnologyModel (TechnologyResponse technologyResponse) {

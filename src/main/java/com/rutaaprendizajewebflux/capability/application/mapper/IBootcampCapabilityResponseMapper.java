@@ -1,0 +1,8 @@
+package com.rutaaprendizajewebflux.capability.application.mapper;
+
+import com.rutaaprendizajewebflux.capability.application.dto.response.BootcampWithCapabilitiesResponse;
+import com.rutaaprendizajewebflux.capability.domain.model.BootcampWithCapabilitiesModel;
+
+public interface IBootcampCapabilityResponseMapper {
+    BootcampWithCapabilitiesResponse toBootcampWithCapabilitiesResponse(BootcampWithCapabilitiesModel bootcampWithCapabilitiesModel);
+}

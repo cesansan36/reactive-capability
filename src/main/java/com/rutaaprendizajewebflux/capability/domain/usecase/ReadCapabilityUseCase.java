@@ -9,7 +9,10 @@ import com.rutaaprendizajewebflux.capability.domain.ports.out.ITechnologyCommuni
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 import static com.rutaaprendizajewebflux.capability.domain.util.DomainConstants.ORDER_BY_TECHNOLOGIES;
+import static com.rutaaprendizajewebflux.capability.domain.util.ExceptionConstants.AT_LEAST_ONE_CAPABILITY_NOT_FOUND_MESSAGE;
 import static com.rutaaprendizajewebflux.capability.domain.util.ExceptionConstants.CAPABILITY_NOT_FOUND_MESSAGE;
 import static com.rutaaprendizajewebflux.capability.domain.util.ExceptionConstants.TECHNOLOGIES_NOT_FOUND_MESSAGE;
 
@@ -32,6 +35,25 @@ public class ReadCapabilityUseCase implements IReadCapabilityServicePort {
         else {
             return findPaginatedByField(page, size, sortBy, direction);
         }
+    }
+
+    @Override
+    public Flux<CapabilityPlusTechnologiesModel> findAllByNames(List<String> names) {
+
+        Flux<CapabilityPlusTechnologiesModel> capabilitiesFound = capabilityPersistencePort
+                .findAllByNames(names);
+
+        Mono<List<CapabilityPlusTechnologiesModel>> capabilitiesFilledWithTechnologies = capabilitiesFound
+                .flatMap(this::fillCapabilityWithTechnologies)
+                .collectList();
+
+        return capabilitiesFilledWithTechnologies
+                .flatMapMany(capabilities -> {
+                    if (capabilities.size() != names.size()) {
+                        return Mono.error(new CapabilityNotFoundException(AT_LEAST_ONE_CAPABILITY_NOT_FOUND_MESSAGE));
+                    }
+                    return Flux.fromIterable(capabilities);
+                });
     }
 
     private Flux<CapabilityPlusTechnologiesModel> findPaginatedByTechnologyQuantity(int page, int size, String direction) {
@@ -62,17 +84,73 @@ public class ReadCapabilityUseCase implements IReadCapabilityServicePort {
                 .findAllPaginatedByField(page, size, sortBy, direction)
                 .switchIfEmpty(Flux.error(new CapabilityNotFoundException(CAPABILITY_NOT_FOUND_MESSAGE)))
                 // Get technologies by capability id one by one
-                .flatMap(capability ->
-                        technologyCommunicationPort.getTechnologiesByCapabilityId(capability.getId())
-                            .flatMap(technologies -> {
-                                if (technologies.getTechnologies().isEmpty()) {
-                                    return Mono.error(new TechnologiesNotFoundException(TECHNOLOGIES_NOT_FOUND_MESSAGE));
-                                }
-                                capability.setTechnologies(technologies.getTechnologies());
-                                return Mono.just(capability);
-                            })
-                            .switchIfEmpty(Mono.error(new TechnologiesNotFoundException(TECHNOLOGIES_NOT_FOUND_MESSAGE)))
-                );
+                .flatMap(this::fillCapabilityWithTechnologies);
+    }
+
+    private Mono<CapabilityPlusTechnologiesModel> fillCapabilityWithTechnologies(CapabilityPlusTechnologiesModel capability) {
+        return technologyCommunicationPort
+                .getTechnologiesByCapabilityId(capability.getId())
+                .flatMap(technologies -> {
+                    if (technologies.getTechnologies().isEmpty()) {
+                        return Mono.error(new TechnologiesNotFoundException(TECHNOLOGIES_NOT_FOUND_MESSAGE));
+                    }
+                    capability.setTechnologies(technologies.getTechnologies());
+                    return Mono.just(capability);
+                })
+                .switchIfEmpty(Mono.error(new TechnologiesNotFoundException(TECHNOLOGIES_NOT_FOUND_MESSAGE)));
+    }
+
+    // ❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕
+    // Los métodos listados abajo son solo para propósitos de aprendizaje, no son necesarios para el correcto funcionamiento de la aplicación
+    // ❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕❕
+    public Flux<CapabilityPlusTechnologiesModel> findAllByNamesBig(List<String> names) {
+
+        Flux<CapabilityPlusTechnologiesModel> capabilitiesFound = capabilityPersistencePort
+                .findAllByNames(names);
+
+        Mono<List<CapabilityPlusTechnologiesModel>> capabilitiesFilledWithTechnologies = capabilitiesFound
+                .flatMap(capability -> technologyCommunicationPort
+                        .getTechnologiesByCapabilityId(capability.getId())
+                        .flatMap(technologies -> {
+                            if (technologies.getTechnologies().isEmpty()) {
+                                return Mono.error(new TechnologiesNotFoundException(TECHNOLOGIES_NOT_FOUND_MESSAGE));
+                            }
+                            capability.setTechnologies(technologies.getTechnologies());
+                            return Mono.just(capability);
+                        })
+                        .switchIfEmpty(Mono.error(new TechnologiesNotFoundException(TECHNOLOGIES_NOT_FOUND_MESSAGE)))
+                )
+                .collectList();
+
+        return capabilitiesFilledWithTechnologies
+                .flatMapMany(capabilities -> {
+                    if (capabilities.size() != names.size()) {
+                        return Mono.error(new CapabilityNotFoundException(AT_LEAST_ONE_CAPABILITY_NOT_FOUND_MESSAGE));
+                    }
+                    return Flux.fromIterable(capabilities);
+                });
+    }
+
+    public Flux<CapabilityPlusTechnologiesModel> findAllByNamesCompact(List<String> names) {
+        return capabilityPersistencePort.findAllByNames(names)
+                .flatMap(capability -> technologyCommunicationPort
+                        .getTechnologiesByCapabilityId(capability.getId())
+                        .flatMap(technologies -> {
+                            if (technologies.getTechnologies().isEmpty()) {
+                                return Mono.error(new TechnologiesNotFoundException(TECHNOLOGIES_NOT_FOUND_MESSAGE));
+                            }
+                            capability.setTechnologies(technologies.getTechnologies());
+                            return Mono.just(capability);
+                        })
+                        .switchIfEmpty(Mono.error(new TechnologiesNotFoundException(TECHNOLOGIES_NOT_FOUND_MESSAGE)))
+                )
+                .collectList()
+                .flatMapMany(capabilities -> {
+                    if (capabilities.size() != names.size()) {
+                        return Mono.error(new CapabilityNotFoundException(AT_LEAST_ONE_CAPABILITY_NOT_FOUND_MESSAGE));
+                    }
+                    return Flux.fromIterable(capabilities);
+                });
     }
 
     private Flux<CapabilityPlusTechnologiesModel> findPaginatedByTechnologyQuantityFunctionalStyle(int page, int size, String direction) {

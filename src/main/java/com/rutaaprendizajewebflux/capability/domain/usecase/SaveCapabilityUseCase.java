@@ -55,6 +55,11 @@ public class SaveCapabilityUseCase implements ISaveCapabilityServicePort {
     }
 
     Mono<CapabilityPlusTechnologiesModel> asociateTechnologiesWithCapability(CapabilityPlusTechnologiesModel capability) {
-        return technologyCommunicationPort.associateTechnologiesWithCapability(capability).thenReturn(capability);
+        return technologyCommunicationPort.associateTechnologiesWithCapability(capability)
+                .map(capWithRelation -> {
+                    capWithRelation.setName(capability.getName());
+                    capWithRelation.setDescription(capability.getDescription());
+                    return capWithRelation;
+                });
     }
 }

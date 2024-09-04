@@ -16,7 +16,7 @@ public class TechnologyWebClientAdapter implements ITechnologyCommunicationPort 
     private final ICapabilityPlusTechnologyWebclientMapper capabilityPlusTechnologyWebclientMapper;
 
     @Override
-    public Mono<Void> associateTechnologiesWithCapability(CapabilityPlusTechnologiesModel capability)
+    public Mono<CapabilityPlusTechnologiesModel> associateTechnologiesWithCapability(CapabilityPlusTechnologiesModel capability)
     {
         return webClient
                 .post()
@@ -26,7 +26,8 @@ public class TechnologyWebClientAdapter implements ITechnologyCommunicationPort 
                 .onStatus( status -> status.is4xxClientError() || status.is5xxServerError() ,
                         response -> response.bodyToMono(String.class)
                                 .flatMap(error -> Mono.error(new RuntimeException("No fue posible asociar las tecnologías con la capacidad: " + error))))
-                .bodyToMono(Void.class)
+                .bodyToMono(CapabilityWithTechnologyResponse.class)
+                .map(capabilityPlusTechnologyWebclientMapper::toModel)
                 .onErrorResume(error -> Mono.error(new RuntimeException(error.getMessage())));
     }
 

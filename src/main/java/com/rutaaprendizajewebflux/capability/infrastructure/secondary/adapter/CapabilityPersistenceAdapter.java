@@ -15,6 +15,8 @@ import org.springframework.data.relational.core.query.Query;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 public class CapabilityPersistenceAdapter implements ICapabilityPersistencePort {
 
@@ -35,7 +37,6 @@ public class CapabilityPersistenceAdapter implements ICapabilityPersistencePort 
         return capabilityRepository
                 .findByName(name).map(soloCapabilityEntityMapper::toSoloModel);
     }
-
 
     @Override
     public Mono<CapabilityPlusTechnologiesModel> save(Mono<CapabilityPlusTechnologiesModel> capabilityPlusTechnologiesModel) {
@@ -61,5 +62,10 @@ public class CapabilityPersistenceAdapter implements ICapabilityPersistencePort 
     @Override
     public Flux<CapabilityPlusTechnologiesModel> findAllByIds(Flux<Long> ids) {
         return capabilityRepository.findAllById(ids).map(capabilityPlusTechnologyEntityMapper::toModel);
+    }
+
+    @Override
+    public Flux<CapabilityPlusTechnologiesModel> findAllByNames(List<String> names) {
+        return capabilityRepository.findByNameIn(names).map(capabilityPlusTechnologyEntityMapper::toModel);
     }
 }

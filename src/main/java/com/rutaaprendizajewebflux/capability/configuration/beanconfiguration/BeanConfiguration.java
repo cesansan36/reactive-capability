@@ -1,31 +1,44 @@
 package com.rutaaprendizajewebflux.capability.configuration.beanconfiguration;
 
+import com.rutaaprendizajewebflux.capability.application.handler.IBootcampCapabilityHandler;
 import com.rutaaprendizajewebflux.capability.application.handler.ICapabilityHandler;
 import com.rutaaprendizajewebflux.capability.application.handler.ISoloCapabilityHandler;
+import com.rutaaprendizajewebflux.capability.application.handler.impl.BootcampCapabilityHandler;
 import com.rutaaprendizajewebflux.capability.application.handler.impl.CapabilityHandler;
 import com.rutaaprendizajewebflux.capability.application.handler.impl.SoloCapabilityHandler;
+import com.rutaaprendizajewebflux.capability.application.mapper.IBootcampCapabilityRequestMapper;
+import com.rutaaprendizajewebflux.capability.application.mapper.IBootcampCapabilityResponseMapper;
 import com.rutaaprendizajewebflux.capability.application.mapper.ICapabilityPlusTechnologiesRequestMapper;
 import com.rutaaprendizajewebflux.capability.application.mapper.ICapabilityPlusTechnologiesResponseMapper;
 import com.rutaaprendizajewebflux.capability.application.mapper.ISoloCapabilityResponseMapper;
+import com.rutaaprendizajewebflux.capability.application.mapper.impl.BootcampCapabilityRequestMapper;
+import com.rutaaprendizajewebflux.capability.application.mapper.impl.BootcampCapabilityResponseMapper;
 import com.rutaaprendizajewebflux.capability.application.mapper.impl.CapabilityPlusTechnologiesRequestMapper;
 import com.rutaaprendizajewebflux.capability.application.mapper.impl.CapabilityPlusTechnologiesResponseMapper;
 import com.rutaaprendizajewebflux.capability.application.mapper.impl.SoloCapabilityResponseMapper;
+import com.rutaaprendizajewebflux.capability.domain.ports.in.IBootcampCapabilityServicePort;
 import com.rutaaprendizajewebflux.capability.domain.ports.in.ICapabilityServicePort;
 import com.rutaaprendizajewebflux.capability.domain.ports.in.IReadCapabilityServicePort;
 import com.rutaaprendizajewebflux.capability.domain.ports.in.ISaveCapabilityServicePort;
+import com.rutaaprendizajewebflux.capability.domain.ports.out.IBootcampCapabilityPersistencePort;
 import com.rutaaprendizajewebflux.capability.domain.ports.out.ICapabilityPersistencePort;
 import com.rutaaprendizajewebflux.capability.domain.ports.out.ITechnologyCommunicationPort;
+import com.rutaaprendizajewebflux.capability.domain.usecase.BootcampCapabilityUseCase;
 import com.rutaaprendizajewebflux.capability.domain.usecase.ReadCapabilityUseCase;
 import com.rutaaprendizajewebflux.capability.domain.usecase.SaveCapabilityUseCase;
 import com.rutaaprendizajewebflux.capability.domain.usecase.SoloCapabilityUseCase;
+import com.rutaaprendizajewebflux.capability.infrastructure.secondary.adapter.BootcampCapabilityRelationPersistenceAdapter;
 import com.rutaaprendizajewebflux.capability.infrastructure.secondary.adapter.CapabilityPersistenceAdapter;
 import com.rutaaprendizajewebflux.capability.infrastructure.secondary.adapter.TechnologyWebClientAdapter;
+import com.rutaaprendizajewebflux.capability.infrastructure.secondary.mapper.IBootcampCapabilityEntityMapper;
 import com.rutaaprendizajewebflux.capability.infrastructure.secondary.mapper.ICapabilityPlusTechnologyEntityMapper;
 import com.rutaaprendizajewebflux.capability.infrastructure.secondary.mapper.ICapabilityPlusTechnologyWebclientMapper;
 import com.rutaaprendizajewebflux.capability.infrastructure.secondary.mapper.ISoloCapabilityEntityMapper;
+import com.rutaaprendizajewebflux.capability.infrastructure.secondary.mapper.impl.BootcampCapabilityEntityMapper;
 import com.rutaaprendizajewebflux.capability.infrastructure.secondary.mapper.impl.CapabilityPlusTechnologyEntityMapper;
 import com.rutaaprendizajewebflux.capability.infrastructure.secondary.mapper.impl.CapabilityPlusTechnologyWebclientMapper;
 import com.rutaaprendizajewebflux.capability.infrastructure.secondary.mapper.impl.SoloCapabilityEntityMapper;
+import com.rutaaprendizajewebflux.capability.infrastructure.secondary.repository.IBootcampCapabilityRepository;
 import com.rutaaprendizajewebflux.capability.infrastructure.secondary.repository.ICapabilityRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -118,5 +131,45 @@ public class BeanConfiguration {
             ICapabilityPlusTechnologiesRequestMapper capabilityPlusTechnologiesRequestMapper
     ) {
         return new CapabilityHandler(saveCapabilityServicePort, readCapabilityServicePort, capabilityPlusTechnologiesResponseMapper, capabilityPlusTechnologiesRequestMapper);
+    }
+
+    @Bean
+    public IBootcampCapabilityHandler bootcampCapabilityHandler(
+            IBootcampCapabilityServicePort bootcampCapabilityServicePort,
+            IBootcampCapabilityRequestMapper bootcampCapabilityRequestMapper,
+            IBootcampCapabilityResponseMapper bootcampCapabilityResponseMapper
+    ) {
+        return new BootcampCapabilityHandler(bootcampCapabilityServicePort, bootcampCapabilityRequestMapper, bootcampCapabilityResponseMapper);
+    }
+
+    @Bean
+    public IBootcampCapabilityRequestMapper bootcampCapabilityRequestMapper() {
+        return new BootcampCapabilityRequestMapper();
+    }
+
+    @Bean
+    public IBootcampCapabilityResponseMapper bootcampCapabilityResponseMapper() {
+        return new BootcampCapabilityResponseMapper();
+    }
+
+    @Bean
+    public IBootcampCapabilityServicePort bootcampCapabilityServicePort(
+            IReadCapabilityServicePort readCapabilityServicePort,
+            IBootcampCapabilityPersistencePort bootcampCapabilityPersistencePort
+    ) {
+        return new BootcampCapabilityUseCase(readCapabilityServicePort, bootcampCapabilityPersistencePort);
+    }
+
+    @Bean
+    public IBootcampCapabilityPersistencePort bootcampCapabilityPersistencePort(
+            IBootcampCapabilityRepository bootcampCapabilityRepository,
+            IBootcampCapabilityEntityMapper bootcampCapabilityEntityMapper
+    ) {
+        return new BootcampCapabilityRelationPersistenceAdapter(bootcampCapabilityRepository, bootcampCapabilityEntityMapper);
+    }
+
+    @Bean
+    public IBootcampCapabilityEntityMapper bootcampCapabilityEntityMapper() {
+        return new BootcampCapabilityEntityMapper();
     }
 }

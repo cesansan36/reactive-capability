@@ -4,5 +4,6 @@ import com.rutaaprendizajewebflux.capability.application.dto.request.SaveCapabil
 import com.rutaaprendizajewebflux.capability.domain.model.CapabilityPlusTechnologiesModel;
 
 public interface ICapabilityPlusTechnologiesRequestMapper {
+
     CapabilityPlusTechnologiesModel toModel(SaveCapabilityPlusTechnologiesRequest request);
 }

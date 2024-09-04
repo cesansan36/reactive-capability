@@ -5,6 +5,7 @@ public final class ExceptionConstants {
     private ExceptionConstants() { }
 
     public static final String CAPABILITY_NOT_FOUND_MESSAGE = "-_- Capability not found";
+    public static final String AT_LEAST_ONE_CAPABILITY_NOT_FOUND_MESSAGE = "-_- At least one capability not found";
     public static final String TECHNOLOGIES_NOT_FOUND_MESSAGE = "-_- Technologies not found";
 
     public static final String MINIMUM_AMOUNT_TECHNOLOGIES_EXCEPTION_MESSAGE = "The minimum amount of technologies (%s) was not reached";
