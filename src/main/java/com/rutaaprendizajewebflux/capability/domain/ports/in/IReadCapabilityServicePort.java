@@ -1,7 +1,6 @@
 package com.rutaaprendizajewebflux.capability.domain.ports.in;
 
 import com.rutaaprendizajewebflux.capability.domain.model.CapabilityPlusTechnologiesModel;
-import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 
 import java.util.List;

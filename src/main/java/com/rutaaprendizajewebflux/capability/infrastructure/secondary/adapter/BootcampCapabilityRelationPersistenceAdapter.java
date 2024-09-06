@@ -23,7 +23,7 @@ public class BootcampCapabilityRelationPersistenceAdapter implements IBootcampCa
         return bootcampCapabilityRelations
                 .map(bootcampCapabilityEntityMapper::toEntity)
                 .collectList()
-                .flatMapMany((bootcampCapabilityEntities) ->
+                .flatMapMany(bootcampCapabilityEntities ->
                         bootcampCapabilityRepository
                                 .saveAll(bootcampCapabilityEntities)
                                 .map(bootcampCapabilityEntityMapper::toModel)

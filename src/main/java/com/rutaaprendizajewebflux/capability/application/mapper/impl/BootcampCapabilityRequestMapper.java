@@ -9,10 +9,6 @@ public class BootcampCapabilityRequestMapper implements IBootcampCapabilityReque
     @Override
     public LinkedBootcampCapabilityModel toBootcampModel(LinkBootcampWithCapabilitiesRequest request) {
 
-        System.out.println("what comes in ==============================");
-
-        System.out.println(request);
-
         return new LinkedBootcampCapabilityModel(
                 request.getBootcampId(),
                 request.getCapabilitiesNames()
