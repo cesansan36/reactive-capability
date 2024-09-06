@@ -52,7 +52,7 @@ class SaveCapabilityUseCaseTest {
 
         when(capabilityPersistencePort.findByName(anyString())).thenReturn(Mono.empty());
         when(capabilityPersistencePort.save(any(Mono.class))).thenReturn(Mono.just(capability));
-        when(technologyCommunicationPort.associateTechnologiesWithCapability(any(CapabilityPlusTechnologiesModel.class))).thenReturn(Mono.empty());
+        when(technologyCommunicationPort.associateTechnologiesWithCapability(any(CapabilityPlusTechnologiesModel.class))).thenReturn(Mono.just(capability)); // Change Mono.empty() to Mono.just(capability)
         when(transactionalOperator.transactional(any(Mono.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         // When
@@ -67,6 +67,7 @@ class SaveCapabilityUseCaseTest {
         verify(capabilityPersistencePort, times(1)).save(any(Mono.class));
         verify(technologyCommunicationPort, times(1)).associateTechnologiesWithCapability(any(CapabilityPlusTechnologiesModel.class));
     }
+
 
     @Test
     void save_CapabilityAlreadyExists() {
