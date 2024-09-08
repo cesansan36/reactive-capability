@@ -56,6 +56,11 @@ public class ReadCapabilityUseCase implements IReadCapabilityServicePort {
                 });
     }
 
+    @Override
+    public Flux<CapabilityPlusTechnologiesModel> findAllByIds(List<Long> ids) {
+        return capabilityPersistencePort.findAllByIds(ids).flatMap(this::fillCapabilityWithTechnologies);
+    }
+
     private Flux<CapabilityPlusTechnologiesModel> findPaginatedByTechnologyQuantity(int page, int size, String direction) {
 
         Flux<CapabilityPlusTechnologiesModel> capabilitiesIdWithTechnologies = technologyCommunicationPort

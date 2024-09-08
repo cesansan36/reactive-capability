@@ -163,9 +163,10 @@ public class BeanConfiguration {
     @Bean
     public IBootcampCapabilityPersistencePort bootcampCapabilityPersistencePort(
             IBootcampCapabilityRepository bootcampCapabilityRepository,
-            IBootcampCapabilityEntityMapper bootcampCapabilityEntityMapper
+            IBootcampCapabilityEntityMapper bootcampCapabilityEntityMapper,
+            R2dbcEntityTemplate r2dbcEntityTemplate
     ) {
-        return new BootcampCapabilityRelationPersistenceAdapter(bootcampCapabilityRepository, bootcampCapabilityEntityMapper);
+        return new BootcampCapabilityRelationPersistenceAdapter(bootcampCapabilityRepository, bootcampCapabilityEntityMapper, r2dbcEntityTemplate);
     }
 
     @Bean

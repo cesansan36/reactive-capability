@@ -6,4 +6,8 @@ import reactor.core.publisher.Mono;
 
 public interface IBootcampCapabilityHandler {
     Mono<ServerResponse> save(ServerRequest request);
+
+    Mono<ServerResponse> findCapabilitiesByBootcampId(ServerRequest serverRequest);
+
+    Mono<ServerResponse> findPaginatedBootcampByCapabilityAmount(ServerRequest serverRequest);
 }

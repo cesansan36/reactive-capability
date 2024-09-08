@@ -40,6 +40,29 @@ public class BootcampCapabilityUseCase implements IBootcampCapabilityServicePort
                 .next();
     }
 
+    @Override
+    public Mono<BootcampWithCapabilitiesModel> findAllByBootcampId(Long bootcampId) {
+        return bootcampCapabilityPersistencePort
+                .findAllByBootcampId(bootcampId)
+                .map(BootcampCapabilityRelationModel::getCapabilityId)
+                .collectList()
+                .flatMapMany(capabilityServicePort::findAllByIds)
+                .collectList()
+                .map(capabilityList -> {
+                    BootcampWithCapabilitiesModel bootcampWithCapabilities = new BootcampWithCapabilitiesModel();
+                    bootcampWithCapabilities.setBootcampId(bootcampId);
+                    bootcampWithCapabilities.setCapabilities(capabilityList);
+                    return bootcampWithCapabilities;
+                });
+    }
+
+    @Override
+    public Flux<BootcampWithCapabilitiesModel> findAllByCapabilityAmount(int page, int size, String direction) {
+        return bootcampCapabilityPersistencePort
+                .findPaginatedBootcampIdsByCapabilityAmount(page, size, direction)
+                .flatMap(this::findAllByBootcampId);
+    }
+
     private BootcampWithCapabilitiesModel buildBootcampWithCapabilities(Long bootcampId, List<CapabilityPlusTechnologiesModel> capabilities) {
         return new BootcampWithCapabilitiesModel(bootcampId, capabilities);
     }

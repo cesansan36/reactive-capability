@@ -13,7 +13,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -22,6 +21,7 @@ import static com.rutaaprendizajewebflux.capability.domain.util.DomainConstants.
 import static com.rutaaprendizajewebflux.capability.domain.util.DomainConstants.ORDER_BY_ID;
 import static com.rutaaprendizajewebflux.capability.domain.util.DomainConstants.ORDER_BY_NAME;
 import static com.rutaaprendizajewebflux.capability.domain.util.DomainConstants.ORDER_BY_TECHNOLOGIES;
+import static com.rutaaprendizajewebflux.capability.util.Validator.validateWholeNumber;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -86,13 +86,5 @@ public class CapabilityHandler implements ICapabilityHandler {
                 .body(response, CapabilityPlusTechnologiesResponse.class);
     }
 
-    int validateWholeNumber(String value, int min) {
-        try {
-            int number = Integer.parseInt(value);
-            return Math.max(min, number);
-        } catch (NumberFormatException e) {
-            log.error("Error parsing number: {}", e.getMessage());
-            return min;
-        }
-    }
+
 }

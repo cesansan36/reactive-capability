@@ -11,6 +11,7 @@ import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
 import static com.rutaaprendizajewebflux.capability.util.Constants.CAPABILITIES_PATH;
+import static com.rutaaprendizajewebflux.capability.util.Constants.GET_BY_BOOTCAMP_ID_SUB_PATH;
 import static com.rutaaprendizajewebflux.capability.util.Constants.GET_BY_ID_SUB_PATH;
 import static com.rutaaprendizajewebflux.capability.util.Constants.LINKED_BOOTCAMP_CAPABILITIES_PATH;
 
@@ -30,6 +31,8 @@ public class ServiceRouterConfiguration {
                 .GET(CAPABILITIES_PATH + GET_BY_ID_SUB_PATH, soloCapabilityHandler::findById)
                 .GET(CAPABILITIES_PATH, capabilityHandler::findAllPaginated)
                 .POST(CAPABILITIES_PATH, capabilityHandler::save)
+                .GET(LINKED_BOOTCAMP_CAPABILITIES_PATH + GET_BY_BOOTCAMP_ID_SUB_PATH, bootcampCapabilityHandler::findCapabilitiesByBootcampId)
+                .GET(LINKED_BOOTCAMP_CAPABILITIES_PATH, bootcampCapabilityHandler::findPaginatedBootcampByCapabilityAmount)
                 .POST(LINKED_BOOTCAMP_CAPABILITIES_PATH, bootcampCapabilityHandler::save)
                 .build();
     }

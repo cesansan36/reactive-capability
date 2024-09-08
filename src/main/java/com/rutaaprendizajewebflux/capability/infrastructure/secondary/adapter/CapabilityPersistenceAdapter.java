@@ -61,7 +61,16 @@ public class CapabilityPersistenceAdapter implements ICapabilityPersistencePort 
 
     @Override
     public Flux<CapabilityPlusTechnologiesModel> findAllByIds(Flux<Long> ids) {
-        return capabilityRepository.findAllById(ids).map(capabilityPlusTechnologyEntityMapper::toModel);
+        return capabilityRepository
+                .findAllById(ids)
+                .map(capabilityPlusTechnologyEntityMapper::toModel);
+    }
+
+    @Override
+    public Flux<CapabilityPlusTechnologiesModel> findAllByIds(List<Long> ids) {
+        return capabilityRepository
+                .findAllById(ids)
+                .map(capabilityPlusTechnologyEntityMapper::toModel);
     }
 
     @Override

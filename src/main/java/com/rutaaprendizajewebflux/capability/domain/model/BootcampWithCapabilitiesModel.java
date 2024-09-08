@@ -12,6 +12,9 @@ public class BootcampWithCapabilitiesModel {
         this.capabilities = capabilities;
     }
 
+    public BootcampWithCapabilitiesModel() {
+    }
+
     public Long getBootcampId() {
         return bootcampId;
     }

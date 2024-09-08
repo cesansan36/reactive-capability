@@ -10,4 +10,6 @@ public interface IReadCapabilityServicePort {
     Flux<CapabilityPlusTechnologiesModel> findAllPaginated(int page, int size, String sortBy, String direction);
 
     Flux<CapabilityPlusTechnologiesModel> findAllByNames(List<String> names);
+
+    Flux<CapabilityPlusTechnologiesModel> findAllByIds(List<Long> ids);
 }

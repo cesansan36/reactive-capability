@@ -18,5 +18,7 @@ public interface ICapabilityPersistencePort {
 
     Flux<CapabilityPlusTechnologiesModel> findAllByIds(Flux<Long> ids);
 
+    Flux<CapabilityPlusTechnologiesModel> findAllByIds(List<Long> ids);
+
     Flux<CapabilityPlusTechnologiesModel> findAllByNames(List<String> names);
 }
