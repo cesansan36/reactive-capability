@@ -16,11 +16,4 @@ public class CapabilityWithTechnologyResponse {
     private Long capabilityId;
     private List<TechnologyResponse> technologies;
 
-    @Override
-    public String toString() {
-        return "CapabilityWithTechnologyResponse{" +
-                "capabilityId=" + capabilityId +
-                ", technologies=" + technologies +
-                '}';
-    }
 }

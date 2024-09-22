@@ -75,13 +75,4 @@ public class CapabilityPlusTechnologiesModel {
         this.technologies = filteredTechnologies;
     }
 
-    @Override
-    public String toString() {
-        return "CapabilityPlusTechnologiesModel{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", technologies=" + technologies +
-                '}';
-    }
 }

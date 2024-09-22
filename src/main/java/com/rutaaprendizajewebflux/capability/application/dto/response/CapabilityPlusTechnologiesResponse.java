@@ -19,14 +19,4 @@ public class CapabilityPlusTechnologiesResponse {
     private int totalTechnologies;
     private List<TechnologyInCapabilityResponse> technologies;
 
-    @Override
-    public String toString() {
-        return "CapabilityPlusTechnologiesResponse{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", totalTechnologies=" + totalTechnologies +
-                ", technologies=" + technologies +
-                '}';
-    }
 }

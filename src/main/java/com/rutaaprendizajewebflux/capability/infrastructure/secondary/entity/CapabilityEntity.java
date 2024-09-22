@@ -18,12 +18,4 @@ public class CapabilityEntity {
     private String name;
     private String description;
 
-    @Override
-    public String toString() {
-        return "CapabilityEntity{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                '}';
-    }
 }

@@ -16,11 +16,4 @@ public class LinkBootcampWithCapabilitiesRequest {
     Long bootcampId;
     List<String> capabilitiesNames;
 
-    @Override
-    public String toString() {
-        return "LinkBootcampWithCapabilitiesRequest{" +
-                "bootcampId=" + bootcampId +
-                ", capabilitiesNames=" + capabilitiesNames +
-                '}';
-    }
 }

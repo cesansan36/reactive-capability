@@ -17,12 +17,4 @@ public class SaveCapabilityPlusTechnologiesRequest {
     private String description;
     private List<String> technologiesNames;
 
-    @Override
-    public String toString() {
-        return "SaveCapabilityPlusTechnologiesRequest{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", technologiesNames=" + technologiesNames +
-                '}';
-    }
 }

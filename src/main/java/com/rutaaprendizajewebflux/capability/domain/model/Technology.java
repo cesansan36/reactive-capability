@@ -25,12 +25,4 @@ public class Technology {
     public void setName(String name) {
         this.name = name;
     }
-
-    @Override
-    public String toString() {
-        return "Technology{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }
