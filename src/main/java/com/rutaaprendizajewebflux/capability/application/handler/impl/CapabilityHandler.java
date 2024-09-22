@@ -63,11 +63,8 @@ public class CapabilityHandler implements ICapabilityHandler {
         String direction = serverRequest.queryParam("direction").filter(ALLOWED_SORT_DIRECTIONS::contains).orElse(DEFAULT_SORT_DIRECTION);
 
         Mono<List<CapabilityPlusTechnologiesResponse>> response = readCapabilityServicePort
-                // Buscamos paginado
                 .findAllPaginated(page, size, sortBy, direction)
-                // Mapeamos a DTO
                 .map(capabilityPlusTechnologiesResponseMapper::toResponse)
-                // Ordenamos
                 .collectSortedList((capability1, capability2) -> {
                     int comparisonResult;
                     if(sortBy.equalsIgnoreCase("technologies")) {

@@ -2,15 +2,12 @@ package com.rutaaprendizajewebflux.capability.domain.usecase;
 
 import com.rutaaprendizajewebflux.capability.domain.exception.CapabilityAlreadyExistsException;
 import com.rutaaprendizajewebflux.capability.domain.model.CapabilityPlusTechnologiesModel;
-import com.rutaaprendizajewebflux.capability.domain.model.Technology;
 import com.rutaaprendizajewebflux.capability.domain.ports.in.ISaveCapabilityServicePort;
 import com.rutaaprendizajewebflux.capability.domain.ports.out.ICapabilityPersistencePort;
 import com.rutaaprendizajewebflux.capability.domain.ports.out.ITechnologyCommunicationPort;
 import com.rutaaprendizajewebflux.capability.domain.util.Validator;
 import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
 
 public class SaveCapabilityUseCase implements ISaveCapabilityServicePort {
 
@@ -33,16 +30,12 @@ public class SaveCapabilityUseCase implements ISaveCapabilityServicePort {
                         .flatMap(exists -> Boolean.TRUE.equals(exists)
                                 ? Mono.error(new CapabilityAlreadyExistsException("La capacidad ya existe"))
                                 : Mono.just(capa)))
-                .flatMap(capability -> {
-                    List<Technology> technologies = capability.getTechnologies();
-
-                    return saveCapability(capability)
-                            .map(savedCapability -> {
-                                savedCapability.setTechnologies(technologies);
-                                return savedCapability;
-                            })
-                            .flatMap(this::asociateTechnologiesWithCapability);
-                })
+                .flatMap(capability -> saveCapability(capability)
+                        .map(savedCapability -> {
+                            savedCapability.setTechnologies(capability.getTechnologies());
+                            return savedCapability;
+                        })
+                        .flatMap(this::asociateTechnologiesWithCapability))
                 .as(transactionalOperator::transactional);  // Ejecutas dentro de una transacción
     }
 

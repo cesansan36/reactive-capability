@@ -7,7 +7,6 @@ import com.rutaaprendizajewebflux.capability.application.mapper.IBootcampCapabil
 import com.rutaaprendizajewebflux.capability.application.mapper.IBootcampCapabilityResponseMapper;
 import com.rutaaprendizajewebflux.capability.domain.model.BootcampWithCapabilitiesModel;
 import com.rutaaprendizajewebflux.capability.domain.model.CapabilityPlusTechnologiesModel;
-import com.rutaaprendizajewebflux.capability.domain.model.LinkedBootcampCapabilityModel;
 import com.rutaaprendizajewebflux.capability.domain.ports.in.IBootcampCapabilityServicePort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -63,7 +62,6 @@ class BootcampCapabilityHandlerTest {
     @Test
     void testSave() {
         LinkBootcampWithCapabilitiesRequest request = new LinkBootcampWithCapabilitiesRequest(1L, List.of("c1", "c2"));
-        LinkedBootcampCapabilityModel linkedModel = new LinkedBootcampCapabilityModel(1L, List.of("c1", "c2"));
         BootcampWithCapabilitiesModel model = new BootcampWithCapabilitiesModel(
                 1L,
                 List.of(

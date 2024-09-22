@@ -19,11 +19,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.rutaaprendizajewebflux.capability.domain.util.DomainConstants.ORDER_BY_TECHNOLOGIES;
-import static com.rutaaprendizajewebflux.capability.domain.util.ExceptionConstants.AT_LEAST_ONE_CAPABILITY_NOT_FOUND_MESSAGE;
 import static com.rutaaprendizajewebflux.capability.domain.util.ExceptionConstants.TECHNOLOGIES_NOT_FOUND_MESSAGE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -68,8 +66,6 @@ class ReadCapabilityUseCaseTest {
         // Given
         when(technologyCommunicationPort.findPaginatedCapabilityIdsByTechnologyAmount(anyInt(), anyInt(), anyString()))
                 .thenReturn(Flux.empty());
-
-        when(capabilityPersistencePort.findAllByIds(any(Flux.class))).thenReturn(Flux.empty());
 
         // When
         Flux<CapabilityPlusTechnologiesModel> result = readCapabilityUseCase.findAllPaginated(0, 10, ORDER_BY_TECHNOLOGIES, "asc");
