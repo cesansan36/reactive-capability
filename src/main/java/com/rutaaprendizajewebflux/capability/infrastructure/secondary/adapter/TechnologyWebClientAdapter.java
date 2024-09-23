@@ -2,6 +2,7 @@ package com.rutaaprendizajewebflux.capability.infrastructure.secondary.adapter;
 
 import com.rutaaprendizajewebflux.capability.domain.model.CapabilityPlusTechnologiesModel;
 import com.rutaaprendizajewebflux.capability.domain.ports.out.ITechnologyCommunicationPort;
+import com.rutaaprendizajewebflux.capability.infrastructure.secondary.exception.LinkingProcessException;
 import com.rutaaprendizajewebflux.capability.infrastructure.secondary.mapper.ICapabilityPlusTechnologyWebclientMapper;
 import com.rutaaprendizajewebflux.capability.infrastructure.secondary.webclientobjects.response.CapabilityWithTechnologyResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +26,10 @@ public class TechnologyWebClientAdapter implements ITechnologyCommunicationPort 
                 .retrieve()
                 .onStatus( status -> status.is4xxClientError() || status.is5xxServerError() ,
                         response -> response.bodyToMono(String.class)
-                                .flatMap(error -> Mono.error(new RuntimeException("No fue posible asociar las tecnologías con la capacidad: " + error))))
+                                .flatMap(error -> Mono.error(new LinkingProcessException("No fue posible asociar las tecnologías con la capacidad: " + error))))
                 .bodyToMono(CapabilityWithTechnologyResponse.class)
                 .map(capabilityPlusTechnologyWebclientMapper::toModel)
-                .onErrorResume(error -> Mono.error(new RuntimeException(error.getMessage())));
+                .onErrorResume(error -> Mono.error(new LinkingProcessException(error.getMessage())));
     }
 
     @Override
@@ -39,10 +40,10 @@ public class TechnologyWebClientAdapter implements ITechnologyCommunicationPort 
                 .retrieve()
                 .onStatus(httpStatus -> httpStatus.is4xxClientError() || httpStatus.is5xxServerError(),
                         clientResponse -> clientResponse.bodyToMono(String.class)
-                                .flatMap(errorBody -> Mono.error(new RuntimeException(errorBody))))
+                                .flatMap(errorBody -> Mono.error(new LinkingProcessException(errorBody))))
                 .bodyToMono(CapabilityWithTechnologyResponse.class)
                 .map(capabilityPlusTechnologyWebclientMapper::toModel)
-                .onErrorResume(Exception.class, ex -> Mono.error(new RuntimeException(ex.getMessage())));
+                .onErrorResume(Exception.class, ex -> Mono.error(new LinkingProcessException(ex.getMessage())));
     }
 
     @Override
@@ -58,9 +59,9 @@ public class TechnologyWebClientAdapter implements ITechnologyCommunicationPort 
                 .retrieve()
                 .onStatus(httpStatus -> httpStatus.is4xxClientError() || httpStatus.is5xxServerError(),
                         clientResponse -> clientResponse.bodyToMono(String.class)
-                                .flatMap(errorBody -> Mono.error(new RuntimeException(errorBody))))
+                                .flatMap(errorBody -> Mono.error(new LinkingProcessException(errorBody))))
                 .bodyToFlux(CapabilityWithTechnologyResponse.class)
                 .map(capabilityPlusTechnologyWebclientMapper::toModel)
-                .onErrorResume(Exception.class, ex -> Mono.error(new RuntimeException(ex.getMessage())));
+                .onErrorResume(Exception.class, ex -> Mono.error(new LinkingProcessException(ex.getMessage())));
     }
 }

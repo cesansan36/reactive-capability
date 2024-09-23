@@ -1,8 +1,11 @@
 package com.rutaaprendizajewebflux.capability.domain.exception;
 
-public class CapabilityNotFoundException extends RuntimeException {
+import com.rutaaprendizajewebflux.capability.configuration.exceptionconfiguration.CustomException;
+import org.springframework.http.HttpStatus;
+
+public class CapabilityNotFoundException extends CustomException {
 
     public CapabilityNotFoundException(String message) {
-        super(message);
+        super(HttpStatus.NOT_FOUND, message);
     }
 }

@@ -87,7 +87,7 @@ public class ServiceRouterConfiguration {
         return builder -> builder
                 .operationId("saveLinkedBootcampCapability")
                 .summary("🥈 Save Bootcamp_Capability relation")
-                .tag("⭐ Relación entre Bootcamp y Capacidad")
+                .tag("🥈 Relación entre Bootcamp y Capacidad")
                 .requestBody(requestBodyBuilder().implementation(LinkBootcampWithCapabilitiesRequest.class))
                 .response(responseBuilder().responseCode("200").description("OK").implementation(BootcampWithCapabilitiesResponse.class));
     }
@@ -97,7 +97,7 @@ public class ServiceRouterConfiguration {
         return builder -> builder
                 .operationId("findCapabilitiesByBootcampId")
                 .summary("🥈 Find Capabilities by Bootcamp Id")
-                .tag("⭐ Relación entre Bootcamp y Capacidad")
+                .tag("🥈 Relación entre Bootcamp y Capacidad")
                 .parameter(parameterBuilder().name("bootcampId").description("Id of the Bootcamp").in(ParameterIn.PATH).required(true))
                 .response(responseBuilder().responseCode("200").description("OK").implementation(BootcampWithCapabilitiesResponse.class));
     }
@@ -107,7 +107,7 @@ public class ServiceRouterConfiguration {
         return builder -> builder
                 .operationId("findPaginatedBootcampByCapabilityAmount")
                 .summary("🥈 Find Paginated Bootcamp by Capability Amount")
-                .tag("⭐ Relación entre Bootcamp y Capacidad")
+                .tag("🥈 Relación entre Bootcamp y Capacidad")
                 .parameter(parameterBuilder().name("page").description("Page number").in(ParameterIn.QUERY).required(true).example("0"))
                 .parameter(parameterBuilder().name("size").description("Page size").in(ParameterIn.QUERY).required(true).example("3"))
                 .parameter(parameterBuilder().name("direction").description("Sort direction").in(ParameterIn.QUERY).required(true).example("ASC"))
