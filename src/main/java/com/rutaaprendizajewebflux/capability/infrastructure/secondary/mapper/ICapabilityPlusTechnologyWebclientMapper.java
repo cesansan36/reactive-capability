@@ -1,0 +1,11 @@
+package com.rutaaprendizajewebflux.capability.infrastructure.secondary.mapper;
+
+import com.rutaaprendizajewebflux.capability.domain.model.CapabilityPlusTechnologiesModel;
+import com.rutaaprendizajewebflux.capability.infrastructure.secondary.webclientobjects.request.CapabilityWithTechnologyRequest;
+import com.rutaaprendizajewebflux.capability.infrastructure.secondary.webclientobjects.response.CapabilityWithTechnologyResponse;
+
+public interface ICapabilityPlusTechnologyWebclientMapper {
+    CapabilityWithTechnologyRequest toRequest(CapabilityPlusTechnologiesModel model);
+
+    CapabilityPlusTechnologiesModel toModel(CapabilityWithTechnologyResponse capabilityWithTechnologyResponse);
+}
